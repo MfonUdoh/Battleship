@@ -28,9 +28,8 @@ for x in range(SIZE):
 
 #Functions
 def print_board():
-    numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    #print(numbers.join(""))
-    print("  0 1 2 3 4 5 6 7 8 9 || 0 1 2 3 4 5 6 7 8 9")
+    numbers = [str(x) for x in range(SIZE)]
+    print("  "+ " ".join(numbers), "||", " ".join(numbers))
     i = 0
     for row in range(SIZE):
         print(i, " ".join(player_radar[row]), "||" , " ".join(player_board[row]))
