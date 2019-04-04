@@ -1,21 +1,33 @@
 from random import randint
 import copy
+import os
+clear = lambda: os.system('clear')
 #Constants and globals
 OCEAN = "O"
 FIRE = "X"
 HIT = "*"
 SIZE = 10
-SHIPS = [5, 4, 3, 3, 2]
+StarWarsMode = False
+CheatMode = False
+
+if StarWarsMode == True:
+  SHIPS = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
+else:
+  SHIPS = [5, 4, 3, 3, 2]
+
+totalhealth = 0
+for each in SHIPS:
+  totalhealth += each
 #globals
 orientation = -1 # Stores the hit ship orientation. Determined on second hit
 total_hits = [] # Stores the ship number every time AI hits a ship while ship is afloat
 miss = 1 # Stores whether last AI shot was a miss
 # Player variables
-player_alive = 17 # -1 every time a ship is hit
+player_alive = totalhealth # -1 every time a ship is hit
 player_radar = []
 player_board = []
 # AI variables
-ai_alive = 17
+ai_alive = totalhealth
 ai_radar = []
 ai_board = []
 ship_position = [] # Stores the first hit of ships which will be eliminated [row, col]
@@ -137,15 +149,31 @@ for x in range(len(SHIPS)):
 
 print("Let's play Battleship!")
 print_board()
+if CheatMode == True:
+  i = 0
+  print()
+  print("Here's a peak at the AI's board")
+  for ele in ai_board:
+    print(i, "", end = "")
+    for e in ele:
+      print(e, end=" ")
+    print()
+    i += 1
+
 while player_alive and ai_alive:
     # player turn
-    guess_row = input("Guess Row:")
-    guess_col = input("Guess Col:")
-    while not is_oceanin(guess_row, guess_col, player_radar):
-        print("Sorry, that is not a valid shot")
-        guess_row = input("Guess Row:")
-        guess_col = input("Guess Col:")
+    guess_row = int(input("Guess Row:"))
+    guess_col = int(input("Guess Col:"))
+    run = False
+    while run == False:
+        if guess_row in range(SIZE) and guess_col in range(SIZE):
+          run = True
+        else:
+          print("Sorry, that is not a valid shot")
+          guess_row = int(input("Guess Row:"))
+          guess_col = int(input("Guess Col:"))
     # Legal Guess
+    clear()
     if ai_board[guess_row][guess_col] != OCEAN:
         ai_alive -= 1
         if ai_alive:
@@ -154,6 +182,7 @@ while player_alive and ai_alive:
         else:
             player_radar[guess_row][guess_col] = HIT
             print("Congratulations! You sunk my battleship!")
+            print_board()
             break
     else:
         print("Admiral, we've missed the enemy battleship!")
